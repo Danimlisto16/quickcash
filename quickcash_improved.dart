@@ -1,39 +1,28 @@
-bool hasDecimal(String input) {
-  // Parse input as a double
-  double? numberInput = double.tryParse(input);
-
-  // Check if the parsed number is not null and has decimals
-  if (numberInput != null && numberInput != numberInput.toInt()) {
-    return true; // Input has decimals
-  } else {
-    return false; // Input does not have decimals
-  }
-}
-
 double roundToNearestMultiple(double number, double multiple) {
   return (number / multiple).ceil() * multiple;
 }
 
-double getDecimalPart(double value) {
-  // Get the integer part of the value
-  int intValue = value.toInt();
-
-  // Get the decimal part by subtracting the integer part from the original value
-  double decimalPart = value - intValue;
-
-  return decimalPart;
-}
-
-List<double>getIntegerOptions(double input){
+List<double> getIntegerOptions(double input) {
   
   List<double> quickcash = [];
-  //quickcash.add(roundToNearestMultiple(input, 1));
-  quickcash.add(roundToNearestMultiple(input, 2));
+
+  //check if value is near to 100
+  
   quickcash.add(roundToNearestMultiple(input, 5));
   quickcash.add(roundToNearestMultiple(input, 10));
   quickcash.add(roundToNearestMultiple(input, 20));
   quickcash.add(roundToNearestMultiple(input, 50));
   quickcash.add(roundToNearestMultiple(input, 100));
+  
+  quickcash = removeDuplicates(quickcash);
+  if (quickcash.length < 3) {
+    quickcash.add(roundToNearestMultiple(input, 110));
+    quickcash.add(roundToNearestMultiple(input, 120));
+    quickcash.add(roundToNearestMultiple(input, 150));
+  }
+  quickcash = removeDuplicates(quickcash);
+  quickcash.sort();
+    
 
   return quickcash;
 }
@@ -48,74 +37,24 @@ List<T> removeDuplicates<T>(List<T> list) {
       uniqueValues.add(item);
     }
   }
-
   return result;
 }
 
-List<double> getDecimalOptions(double input) {
-  List<double> coins = [0.01, 0.05, 0.10, 0.25, 0.50];
-  List<double> quickcash = [];
-  double decimalPart = getDecimalPart(input);
-
-  int decimalIndex = coins.indexOf(decimalPart);
-
-  if (decimalIndex != -1) {
-    for (int number = decimalIndex; number < coins.length; number++) {
-      if (decimalPart <= coins[number]) {
-        quickcash.add(input.toInt() + coins[number]);
-      }
-    }
-  } else {
-    double roundedNumber = roundToNearestMultiple(decimalPart, 0.05);
-    quickcash.add(roundedNumber + input.toInt());
-    if (decimalPart < 0.5) {
-
-      quickcash.add((input * 10).ceil() / 10);
-      for (int number = 0; number < coins.length; number++) {
-        if (decimalPart < coins[number]) {
-          quickcash.add(input.toInt() + coins[number]);
-        }
-      }
-    } else {
-      quickcash.add((input * 10).ceil() / 10);
-      if (decimalPart <= 0.75) {
-        quickcash.add(input.toInt() + 0.75);
-      }
-    }
-  }
-  return quickcash;
-}
-
-
 void main() {
-  List<double> quickcash = [];
-  int decimalOptions = 4;
-    
-    
-  double input = 711.71;
-  // double input = 11.00;
-  // double input = 29.75;
-  // double input = 1963.5;
-  // double input = 209.12;
-  quickcash.add(input);
-  // if (hasDecimal(input.toString())) {
-  //   // >GENERATE AT LEAST 3 DECIMAL OPTIONS
-  //   quickcash.addAll(getDecimalOptions(input));
-  //   quickcash = removeDuplicates(quickcash);
-  //   quickcash.sort();
 
-  //   if(quickcash.length > decimalOptions){
-  //     quickcash = quickcash.sublist(0, decimalOptions);
-  //   }
-  // }
+List<double> test_values = [50, 19.22, 51.22, 65, 71.03, 99.08, 47.89, 99.01];
 
-  //generate the quick cash int options
-  input = input.ceilToDouble();
-  quickcash.add(input);
-  quickcash.addAll(getIntegerOptions(input));
-  quickcash = removeDuplicates(quickcash);
-  quickcash.sort();
+for (int input = 0; input < test_values.length; input++) {
+    print((input + 1).toString() +
+        ") " +
+        "--------------------------------------------------------");
+    List<double> quickcash = [];
 
-  print(quickcash);
-
+    quickcash.add(test_values[input]);
+    //generate the quick cash int options
+    quickcash.add(test_values[input].ceilToDouble());
+    quickcash.addAll(getIntegerOptions(test_values[input].ceilToDouble()));
+    quickcash = removeDuplicates(quickcash);    
+    print(quickcash);
+  }
 }
