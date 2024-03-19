@@ -90,18 +90,32 @@ List<double> getDecimalOptions(double input) {
 void main() {
   List<double> quickcash = [];
   int decimalOptions = 4;
+    
+    
   double input = 711.71;
   // double input = 11.00;
   // double input = 29.75;
   // double input = 1963.5;
   // double input = 209.12;
-  
   quickcash.add(input);
+  // if (hasDecimal(input.toString())) {
+  //   // >GENERATE AT LEAST 3 DECIMAL OPTIONS
+  //   quickcash.addAll(getDecimalOptions(input));
+  //   quickcash = removeDuplicates(quickcash);
+  //   quickcash.sort();
+
+  //   if(quickcash.length > decimalOptions){
+  //     quickcash = quickcash.sublist(0, decimalOptions);
+  //   }
+  // }
+
+  //generate the quick cash int options
   input = input.ceilToDouble();
   quickcash.add(input);
   quickcash.addAll(getIntegerOptions(input));
   quickcash = removeDuplicates(quickcash);
   quickcash.sort();
+
   print(quickcash);
 
 }
